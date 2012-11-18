@@ -42,3 +42,26 @@ alias d='dirs -v | head -10'
 function mcd() { 
   mkdir -p "$1" && cd "$1"; 
 }
+
+# move up n directories
+function up () {
+
+	if (( $# == 0 ))
+	then
+		cd ../
+	elif (( $# > 1 ))
+	then
+		echo "Usage: up [int]"
+		return 2
+	else
+		case $1 in
+			''|*[!0-9]*) echo "Usage: up [int]"; return 2 ;;
+		esac
+		numdirs=""
+		for i in `seq 1 $1`
+		do
+			numdirs="$numdirs../"
+		done
+		cd $numdirs
+	fi
+}
