@@ -4,6 +4,10 @@ function git_prompt_info() {
   echo "$ZSH_THEME_GIT_PROMPT_PREFIX${ref#refs/heads/}$(parse_git_dirty)$ZSH_THEME_GIT_PROMPT_SUFFIX"
 }
 
+function git_prompt_verbose_info() {
+  ref=$(git symbolic-ref HEAD 2> /dev/null) || return
+  echo "$ZSH_THEME_GIT_PROMPT_PREFIX${ref#refs/heads/}$(git_prompt_status)$(git_prompt_ahead)$ZSH_THEME_GIT_PROMPT_SUFFIX"
+}
 
 # Checks if working tree is dirty
 parse_git_dirty() {
