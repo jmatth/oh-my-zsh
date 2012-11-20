@@ -1,7 +1,13 @@
-#need_a_name theme
+#!/bin/zsh
+#my custom theme
 
-MODE_INDICATOR="%{$fg[green]%}Δ: %{$reset_color%}"
+# Mode indicator for vi-mode plugin
+MODE_INDICATOR="%{$fg[yellow]%}Δ%{$reset_color%}"
 
+# Promptchar to be displayed in a git repository
+local git_prompt_char="±"
+
+# Characters to indicate git repo status
 ZSH_THEME_GIT_PROMPT_PREFIX="%{$FG[220]%}["
 ZSH_THEME_GIT_PROMPT_SUFFIX="%{$FG[220]%}] %{$reset_color%}"
 ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg[red]%}⚡%{$reset_color%}"
@@ -13,7 +19,20 @@ ZSH_THEME_GIT_PROMPT_RENAMED="%{$fg[red]%}↷%{$reset_color%}"
 ZSH_THEME_GIT_PROMPT_DELETED="%{$fg[red]%}⊗%{$reset_color%}"
 ZSH_THEME_GIT_PROMPT_UNMERGED="%{$fg[red]%}✕%{$reset_color%}"
 
-# prompt.zsh: A custom prompt for zsh (256 color version).
+# Override colors for syntax highlighting.
+: ${ZSH_HIGHLIGHT_STYLES[history-expansion]::=fg=magenta}
+: ${ZSH_HIGHLIGHT_STYLES[path]::=none}
+
+# Functions used to display the custom prompt character.
+function inGit ()
+{
+	git status -z &> /dev/null && echo "${git_prompt_char}"
+}
+
+function promptChar ()
+{
+	echo "${$(vi_mode_prompt_info):-${$(inGit):-${priv}}}"
+}
 
 if [[ $UID == 0 ]]
 then
@@ -26,27 +45,18 @@ fi
 if (($+SSH_CONNECTION)); then
 	local host="%{$FX[bold]$FG[208]%}%m%{$reset_color%}"
 else
-   local host="%{$FX[bold]$FG[034]%}%m%{$reset_color%}"
+	local host="%{$FX[bold]$FG[034]%}%m%{$reset_color%}"
 fi
 
 local time="%{$FG[005]%}%*%{$reset_color%}"
 local dir="%{$FG[045]%}%~%{$reset_color%}"
 
-local return="%(?.%{$FG[064]%}☺.%{$FG[009]%}☹%?)%{$reset_color%}"
+local return="%(?.%{$fg[green]%}☺.%{$fg_bold[red]%}☹%?)%{$reset_color%}"
 local hist="%{$FG[220]%}%!!%{$reset_color%}"
 local priv="%#"
 
 #PROMPT="${name}@${host}:${priv} "
 #RPROMPT="${dir} ${return} ${vcsi}${time}"
 
-PROMPT='${name}@${host}:${priv} $(vi_mode_prompt_info)'
+PROMPT='${name}@${host}:$(promptChar) '
 RPROMPT='${dir} ${return} $(git_prompt_verbose_info)${time}'
-#RPROMPT='$(git_prompt_status)%{$reset_color%}'
-
-
-#PROMPT="${p}(${name}${p}@${host}${p})-${jobs}(${time}${p})-(${dir}${p}${vcsi}${p})
-#(${last}${p}${hist}${p}:${priv}${p})- %{$FX[reset]%}"
-
-#Trying to emulate my old bash prompt
-#PROMPT="%{$reset_color%}${name}%{$reset_color%}@${host}%{$reset_color%}:${dir}%{$reset_color%}${vcsi}%{$reset_color%}${priv} %{$reset_color%}"
-#RPROMPT="${last} ${time}%{$reset_color%}"
