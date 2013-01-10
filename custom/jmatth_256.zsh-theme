@@ -8,8 +8,8 @@ MODE_INDICATOR="%{$fg[yellow]%}Δ%{$reset_color%}"
 local git_prompt_char="±"
 
 # Characters to indicate git repo status
-ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg[yellow]%}["
-ZSH_THEME_GIT_PROMPT_SUFFIX="%{$fg[yellow]%}] %{$reset_color%}"
+ZSH_THEME_GIT_PROMPT_PREFIX="%{$FG[220]%}["
+ZSH_THEME_GIT_PROMPT_SUFFIX="%{$FG[220]%}] %{$reset_color%}"
 ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg[red]%}⚡%{$reset_color%}"
 ZSH_THEME_GIT_PROMPT_AHEAD="%{$fg[red]%}⌚%{$reset_color%}"
 ZSH_THEME_GIT_PROMPT_UNTRACKED="%{$fg[red]%}⍰%{$reset_color%}"
@@ -36,23 +36,23 @@ function promptChar ()
 
 if [[ $UID == 0 ]]
 then
-	local name="%{$fg_bold[red]%}%n%{$reset_color%}"
+	local name="%{$FX[bold]$FG[001]%}%n%{$reset_color%}"
 else
-	local name="%{$fg[blue]%}%n%{$reset_color%}"
+	local name="%{$FX[bold]$FG[027]%}%n%{$reset_color%}"
 fi
 
 # And different colors if over ssh
 if (($+SSH_CONNECTION)); then
-	local host="%{$fg_bold[red]%}%m%{$reset_color%}"
+	local host="%{$FX[bold]$FG[208]%}%m%{$reset_color%}"
 else
-	local host="%{$fg[green]%}%m%{$reset_color%}"
+	local host="%{$FX[bold]$FG[034]%}%m%{$reset_color%}"
 fi
 
-local time="%{$fg[magenta]%}%*%{$reset_color%}"
-local dir="%{$fg[cyan]%}%~%{$reset_color%}"
+local time="%{$FG[005]%}%*%{$reset_color%}"
+local dir="%{$FG[045]%}%~%{$reset_color%}"
 
 local return="%(?.%{$fg[green]%}☺.%{$fg_bold[red]%}☹%?)%{$reset_color%}"
-local hist="%{$fg[yellow]%}%!!%{$reset_color%}"
+local hist="%{$FG[220]%}%!!%{$reset_color%}"
 local priv="%#"
 
 #PROMPT="${name}@${host}:${priv} "
