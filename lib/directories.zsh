@@ -39,7 +39,7 @@ alias rd=rmdir
 alias d='dirs -v | head -10'
 
 # mkdir & cd to it
-function mcd() { 
+function mkcd() { 
   mkdir -p "$1" && cd "$1"; 
 }
 
