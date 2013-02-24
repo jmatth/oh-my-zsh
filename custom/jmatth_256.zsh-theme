@@ -11,9 +11,9 @@ local git_prompt_char="±"
 ZSH_THEME_GIT_PROMPT_PREFIX="%{$FG[220]%}["
 ZSH_THEME_GIT_PROMPT_SUFFIX="%{$FG[220]%}] %{$reset_color%}"
 
-ZSH_THEME_GIT_PROMPT_UNTRACKED="?"
 ZSH_THEME_GIT_PROMPT_ADDED="%{$FG[040]%}+%{$reset_color%}"
 ZSH_THEME_GIT_PROMPT_RENAMED="%{$FG[040]%}$%{$reset_color%}"
+ZSH_THEME_GIT_PROMPT_UNTRACKED="%{$FG[196]%}?%{$reset_color%}"
 ZSH_THEME_GIT_PROMPT_MODIFIED="%{$FG[196]%}*%{$reset_color%}"
 ZSH_THEME_GIT_PROMPT_DELETED="%{$FG[196]%}×%{$reset_color%}"
 ZSH_THEME_GIT_PROMPT_UNMERGED="%{$FG[196]%}!%{$reset_color%}"
@@ -54,8 +54,8 @@ fi
 local time="%{$FG[005]%}%*%{$reset_color%}"
 local dir="%{$FG[045]%}%~%{$reset_color%}"
 
-local return="%(?.%{$fg[green]%}☺.%{$fg_bold[red]%}☹%?)%{$reset_color%}"
-local hist="%{$FG[220]%}%!!%{$reset_color%}"
+local return="%(?.%{$fg[green]%}«.%{$fg_bold[red]%}«%?)%{$reset_color%}"
+#local hist="%{$FG[220]%}%!!%{$reset_color%}"
 local priv="%#"
 
 #PROMPT="${name}@${host}:${priv} "
