@@ -23,8 +23,11 @@ ZSH_THEME_GIT_PROMPT_BEHIND="%{$FG[123]%}<%{$reset_color%}"
 ZSH_THEME_GIT_PROMPT_DIVERGED="%{$FG[123]%}Ø%{$reset_color%}"
 
 # Override colors for syntax highlighting.
-: ${ZSH_HIGHLIGHT_STYLES[history-expansion]::=fg=magenta}
-: ${ZSH_HIGHLIGHT_STYLES[path]::=none}
+if (($+ZSH_HIGHLIGHT_HIGHLIGHTERS))
+then
+	: ${ZSH_HIGHLIGHT_STYLES[history-expansion]::=fg=magenta}
+	: ${ZSH_HIGHLIGHT_STYLES[globbing]::=fg=cyan}
+fi
 
 # Functions used to display the custom prompt character.
 function inGit ()
