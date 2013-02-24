@@ -41,7 +41,7 @@ if [[ $UID == 0 ]]
 then
 	local name="%{$fg_bold[red]%}%n%{$reset_color%}"
 else
-	local name="%{$fg[blue]%}%n%{$reset_color%}"
+	local name="%{$fg[cyan]%}%n%{$reset_color%}"
 fi
 
 # And different colors if over ssh
