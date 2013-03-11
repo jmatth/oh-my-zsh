@@ -65,7 +65,7 @@ function git_prompt_long_sha() {
 
 # Get the status of the working tree
 git_prompt_status() {
-  INDEX=$(git status --porcelain -b 2> /dev/null)
+  INDEX=$(git status --porcelain 2> /dev/null)
   STATUS=""
   if $(echo "$INDEX" | grep '^## .*diverged' &> /dev/null); then
     STATUS="$ZSH_THEME_GIT_PROMPT_DIVERGED$STATUS"
@@ -96,6 +96,9 @@ git_prompt_status() {
   elif $(echo "$INDEX" | grep '^ T ' &> /dev/null); then
     STATUS="$ZSH_THEME_GIT_PROMPT_MODIFIED$STATUS"
   fi
+  if $(echo "$INDEX" | grep '^?? ' &> /dev/null); then
+    STATUS="$ZSH_THEME_GIT_PROMPT_UNTRACKED$STATUS"
+  fi
   if $(echo "$INDEX" | grep '^R  ' &> /dev/null); then
     STATUS="$ZSH_THEME_GIT_PROMPT_RENAMED$STATUS"
   fi
@@ -103,9 +106,6 @@ git_prompt_status() {
     STATUS="$ZSH_THEME_GIT_PROMPT_ADDED$STATUS"
   elif $(echo "$INDEX" | grep '^M  ' &> /dev/null); then
     STATUS="$ZSH_THEME_GIT_PROMPT_ADDED$STATUS"
-  fi
-  if $(echo "$INDEX" | grep '^?? ' &> /dev/null); then
-    STATUS="$ZSH_THEME_GIT_PROMPT_UNTRACKED$STATUS"
   fi
   echo $STATUS
 }

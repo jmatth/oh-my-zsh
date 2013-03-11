@@ -2,29 +2,32 @@
 #my custom theme
 
 # Mode indicator for vi-mode plugin
-MODE_INDICATOR="%{$fg[yellow]%}»%{$reset_color%}"
+MODE_INDICATOR="%{$fg[yellow]%}>%{$reset_color%}"
 
 # Promptchar to be displayed in a git repository
-local git_prompt_char="±"
+local git_prompt_char="+"
 
 # Characters to indicate git repo status
 ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg[yellow]%}["
 ZSH_THEME_GIT_PROMPT_SUFFIX="%{$fg[yellow]%}] %{$reset_color%}"
 
-ZSH_THEME_GIT_PROMPT_UNTRACKED="?"
 ZSH_THEME_GIT_PROMPT_ADDED="%{$fg[green]%}+%{$reset_color%}"
 ZSH_THEME_GIT_PROMPT_RENAMED="%{$fg[green]%}$%{$reset_color%}"
+ZSH_THEME_GIT_PROMPT_UNTRACKED="%{$fg[red]%}?%{$reset_color%}"
 ZSH_THEME_GIT_PROMPT_MODIFIED="%{$fg[red]%}*%{$reset_color%}"
-ZSH_THEME_GIT_PROMPT_DELETED="%{$fg[red]%}×%{$reset_color%}"
+ZSH_THEME_GIT_PROMPT_DELETED="%{$fg[red]%}x%{$reset_color%}"
 ZSH_THEME_GIT_PROMPT_UNMERGED="%{$fg[red]%}!%{$reset_color%}"
 ZSH_THEME_GIT_PROMPT_STASHED="%{$fg[magenta]%}&%{$reset_color%}"
 ZSH_THEME_GIT_PROMPT_AHEAD="%{$fg[cyan]%}>%{$reset_color%}"
 ZSH_THEME_GIT_PROMPT_BEHIND="%{$fg[cyan]%}<%{$reset_color%}"
-ZSH_THEME_GIT_PROMPT_DIVERGED="%{$fg[cyan]%}Ø%{$reset_color%}"
+ZSH_THEME_GIT_PROMPT_DIVERGED="%{$fg[cyan]%}0%{$reset_color%}"
 
 # Override colors for syntax highlighting.
-: ${ZSH_HIGHLIGHT_STYLES[history-expansion]::=fg=magenta}
-: ${ZSH_HIGHLIGHT_STYLES[path]::=none}
+if (($+ZSH_HIGHLIGHT_HIGHLIGHTERS))
+then
+	: ${ZSH_HIGHLIGHT_STYLES[history-expansion]::=fg=magenta}
+	: ${ZSH_HIGHLIGHT_STYLES[globbing]::=fg=cyan}
+fi
 
 # Functions used to display the custom prompt character.
 function inGit ()
@@ -41,7 +44,7 @@ if [[ $UID == 0 ]]
 then
 	local name="%{$fg_bold[red]%}%n%{$reset_color%}"
 else
-	local name="%{$fg[blue]%}%n%{$reset_color%}"
+	local name="%{$fg[cyan]%}%n%{$reset_color%}"
 fi
 
 # And different colors if over ssh
@@ -54,8 +57,8 @@ fi
 local time="%{$fg[magenta]%}%*%{$reset_color%}"
 local dir="%{$fg[cyan]%}%~%{$reset_color%}"
 
-local return="%(?.%{$fg[green]%}☺.%{$fg_bold[red]%}☹%?)%{$reset_color%}"
-local hist="%{$fg[yellow]%}%!!%{$reset_color%}"
+local return="%(?.%{$fg[green]%}<.%{$fg_bold[red]%}<%?)%{$reset_color%}"
+#local hist="%{$fg[yellow]%}%!!%{$reset_color%}"
 local priv="%#"
 
 #PROMPT="${name}@${host}:${priv} "
