@@ -2,7 +2,7 @@
 #my custom theme
 
 # Different colors and symbols depending on terminal
-if [[ `tput colors` >= 256]]
+if [[ `tput colors` -ge 256 ]]
 then
 	# Mode indicator for vi-mode plugin
 	MODE_INDICATOR="%{$fg[yellow]%}»%{$reset_color%}"
