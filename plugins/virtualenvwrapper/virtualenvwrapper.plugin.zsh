@@ -1,6 +1,4 @@
-wrapsource=`which virtualenvwrapper_lazy.sh`
-
-if [[ -f "$wrapsource" ]]; then
+if [[ -f $(which virtualenvwrapper_lazy.sh 2> /dev/null) ]]; then
   source $wrapsource
 
   if [[ ! $DISABLE_VENV_CD -eq 1 ]]; then
