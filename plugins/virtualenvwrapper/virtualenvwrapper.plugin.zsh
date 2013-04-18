@@ -35,6 +35,4 @@ if [[ -f "$wrapsource" ]]; then
         builtin cd "$@" && workon_cwd
     }
   fi
-else
-  print "zsh virtualenvwrapper plugin: Cannot find virtualenvwrapper_lazy.sh. Please install with \`pip install virtualenvwrapper\`."
 fi
