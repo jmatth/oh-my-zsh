@@ -80,6 +80,4 @@ if which tmux &> /dev/null
 			_zsh_tmux_plugin_run
 		fi
 	fi
-else
-	print "zsh tmux plugin: tmux not found. Please install tmux before using this plugin."
 fi
