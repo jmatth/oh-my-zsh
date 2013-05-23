@@ -1,4 +1,4 @@
-local wrapsource=`which virtualenvwrapper_lazy.sh`
+local wrapsource=`which virtualenvwrapper_lazy.sh 2> /dev/null`
 
 if [[ -f "$wrapsource" ]]; then
   source $wrapsource
