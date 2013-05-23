@@ -5,49 +5,55 @@ function theme_precmd {
     local TERMWIDTH
     (( TERMWIDTH = ${COLUMNS} - 2 ))
 
-
     ###
-    # Truncate the path if it's too long.
+    # Fit as much info in the top line as possible
 
     PR_FILLBAR=""
     PR_PWDLEN=""
 
-	local promptsize=${#${(%):---(%n@%m:%l)-------}}
-    export ZSH_RUBYPROMPT_INFO=`rbenv_prompt_info`
-	local rubypromptsize
-    (( rubypromptsize = ${#${ZSH_RUBYPROMPT_INFO}} + 0))
+    local promptsize=${#${(%):---(%n@%m:%l)----}}
+
     local pwdsize=${#${(%):-%~}}
 
-	export ZSH_VIRTUALENVPROMPT_INFO=`virtualenv_prompt_info`
-	local virtualenvpromptsize
-	((virtualenvpromptsize = ${#${ZSH_VIRTUALENVPROMPT_INFO}} + 0))
+    export ZSH_RUBYPROMPT_INFO=`rbenv_prompt_info | tr -d '\n'`
+    local rubypromptsize=${#${ZSH_RUBYPROMPT_INFO}}
+    if [[ -n "$ZSH_RUBYPROMPT_INFO" ]]; then
+        (( rubypromptsize = rubypromptsize + 3 ))
+        ZSH_RUBYPROMPT_INFO="$PR_BAR_COLOR$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT${PR_BRACKET_COLOR}[${PR_RED}${ZSH_RUBYPROMPT_INFO}${PR_BRACKET_COLOR}]"
+    else
+        ZSH_RUBYPROMPT_INFO=""
+    fi
+
+    export ZSH_VIRTUALENVPROMPT_INFO=`virtualenv_prompt_info`
+    local virtualenvpromptsize=${#${ZSH_VIRTUALENVPROMPT_INFO}}
+    if [[ -n "$ZSH_VIRTUALENVPROMPT_INFO" ]]; then
+        (( virtualenvpromptsize = virtualenvpromptsize + 3 ))
+        ZSH_VIRTUALENVPROMPT_INFO="$PR_BAR_COLOR$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT${PR_BRACKET_COLOR}[${PR_YELLOW}${ZSH_VIRTUALENVPROMPT_INFO}${PR_BRACKET_COLOR}]"
+    else
+        ZSH_VIRTUALENVPROMPT_INFO=""
+    fi
 
     local prompt_chosen=false
-
-    if ! [[ "$promptsize + $rubypromptsize + $virtualenvpromptsize + $pwdsize" -gt $TERMWIDTH ]]; then
-        if [[ -n "$ZSH_RUBYPROMPT_INFO" ]]; then
-            ((rubypromptsize = rubypromptsize + 2))
-            ZSH_RUBYPROMPT_INFO="${PR_BRACKET_COLOR}[${PR_RED}${ZSH_RUBYPROMPT_INFO}${PR_BRACKET_COLOR}]"
-        fi
-        if [[ -n "$ZSH_VIRTUALENVPROMPT_INFO" ]]; then
-            ((virtualenvpromptsize = virtualenvpromptsize + 3))
-            ZSH_VIRTUALENVPROMPT_INFO="${PR_BRACKET_COLOR}[${PR_YELLOW}${ZSH_VIRTUALENVPROMPT_INFO}${PR_BRACKET_COLOR}]"
-        fi
+    if [[ "$promptsize + $rubypromptsize + $virtualenvpromptsize + $pwdsize" -le $TERMWIDTH ]]; then
         PR_FILLBAR="\${(l.(($TERMWIDTH - ($promptsize + $rubypromptsize + $virtualenvpromptsize + $pwdsize)))..${PR_HBAR}.)}"
         prompt_chosen=true
     fi
-    if ! $prompt_chosen && [[ $virtualenvpromptsize -gt 0 ]]; then
+    if ! $prompt_chosen && [[ $virtualenvpromptsize -gt 1 ]] && \
+        [[ "$virtualenvpromptsize + $promptsize + $pwdsize" -le $TERMWIDTH ]]; then
         ZSH_RUBYPROMPT_INFO=""
-        ((virtualenvpromptsize = virtualenvpromptsize + 3))
-        ZSH_VIRTUALENVPROMPT_INFO="${PR_BRACKET_COLOR}[${PR_YELLOW}${ZSH_VIRTUALENVPROMPT_INFO}${PR_BRACKET_COLOR}]"
         PR_FILLBAR="\${(l.(($TERMWIDTH - ($promptsize + $virtualenvpromptsize + $pwdsize)))..${PR_HBAR}.)}"
         prompt_chosen=true
     fi
-    if ! $prompt_chosen && [[ $rubypromptsize > 0 ]]; then
+    if ! $prompt_chosen && [[ $rubypromptsize -gt 0 ]] && \
+        [[ "$rubypromptsize + $promptsize + $pwdsize" -le $TERMWIDTH ]]; then
         ZSH_VIRTUALENVPROMPT_INFO=""
-        ((rubypromptsize = rubypromptsize + 2))
-        ZSH_RUBYPROMPT_INFO="${PR_BRACKET_COLOR}[${PR_RED}${ZSH_RUBYPROMPT_INFO}${PR_BRACKET_COLOR}]"
         PR_FILLBAR="\${(l.(($TERMWIDTH - ($promptsize + $rubypromptsize + $pwdsize)))..${PR_HBAR}.)}"
+        prompt_chosen=true
+    fi
+    if ! $prompt_chosen && [[ "$pwdsize + $promptsize" -le $TERMWIDTH ]]; then
+        ZSH_RUBYPROMPT_INFO=""
+        ZSH_VIRTUALENVPROMPT_INFO=""
+        PR_FILLBAR="\${(l.(($TERMWIDTH - ($promptsize + $pwdsize)))..${PR_HBAR}.)}"
         prompt_chosen=true
     fi
     if ! $prompt_chosen; then
@@ -61,8 +67,8 @@ function theme_precmd {
 setopt extended_glob
 theme_preexec () {
     if [[ "$TERM" == "screen" || "$TERM" == "screen-256color" ]]; then
-	local CMD=${1[(wr)^(*=*|sudo|-*)]}
-	echo -n "\ek$CMD\e\\"
+    local CMD=${1[(wr)^(*=*|sudo|-*)]}
+    echo -n "\ek$CMD\e\\"
     fi
 }
 
@@ -86,12 +92,12 @@ setprompt () {
 
     autoload colors zsh/terminfo
     if [[ "$terminfo[colors]" -ge 8 ]]; then
-	colors
+    colors
     fi
     for color in RED GREEN YELLOW BLUE MAGENTA CYAN WHITE GREY; do
-	eval PR_$color='%{$fg[${(L)color}]%}'
-	eval PR_BOLD_$color='%{$terminfo[bold]$fg[${(L)color}]%}'
-	(( count = $count + 1 ))
+    eval PR_$color='%{$fg[${(L)color}]%}'
+    eval PR_BOLD_$color='%{$terminfo[bold]$fg[${(L)color}]%}'
+    (( count = $count + 1 ))
     done
     PR_NO_COLOR="%{$terminfo[sgr0]%}"
 
@@ -171,39 +177,42 @@ setprompt () {
     # Decide if we need to set titlebar text.
 
     case $TERM in
-	xterm*)
-	    PR_TITLEBAR=$'%{\e]0;%(!.-=*[ROOT]*=- | .)%n@%m:%~ | ${COLUMNS}x${LINES} | %y\a%}'
-	    ;;
-	screen)
-	    PR_TITLEBAR=$'%{\e_screen \005 (\005t) | %(!.-=[ROOT]=- | .)%n@%m:%~ | ${COLUMNS}x${LINES} | %y\e\\%}'
-	    ;;
-	*)
-	    PR_TITLEBAR=''
-	    ;;
+    xterm*)
+        PR_TITLEBAR=$'%{\e]0;%(!.-=*[ROOT]*=- | .)%n@%m:%~ | ${COLUMNS}x${LINES} | %y\a%}'
+        ;;
+    screen)
+        PR_TITLEBAR=$'%{\e_screen \005 (\005t) | %(!.-=[ROOT]=- | .)%n@%m:%~ | ${COLUMNS}x${LINES} | %y\e\\%}'
+        ;;
+    *)
+        PR_TITLEBAR=''
+        ;;
     esac
-
 
     ###
     # Decide whether to set a screen title
     if [[ "$TERM" == "screen" ]]; then
-	PR_STITLE=$'%{\ekzsh\e\\%}'
+    PR_STITLE=$'%{\ekzsh\e\\%}'
     else
-	PR_STITLE=''
+    PR_STITLE=''
     fi
 
+    ###
+    # Use different color for hostname over ssh
+    if (($+SSH_CONNECTION)); then
+        PR_HOST_COLOR=$PR_YELLOW
+    else
+        PR_HOST_COLOR=$PR_GREEN
+    fi
 
     ###
     # Finally, the prompt.
 
     PROMPT='$PR_SET_CHARSET$PR_STITLE${(e)PR_TITLEBAR}\
 $PR_BAR_COLOR$PR_SHIFT_IN$PR_ULCORNER$PR_HBAR$PR_SHIFT_OUT\
-${PR_BRACKET_COLOR}[$PR_CYAN%(!.%S${PR_RED}ROOT%s.%n)$PR_NO_COLOR@$PR_GREEN%m:%l$PR_BRACKET_COLOR]\
-$PR_BAR_COLOR$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT\
+${PR_BRACKET_COLOR}[%(!.%S${PR_RED}ROOT%s.$PR_CYAN%n)$PR_NO_COLOR@$PR_HOST_COLOR%m:%l$PR_BRACKET_COLOR]\
 $ZSH_RUBYPROMPT_INFO\
-$PR_BAR_COLOR$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT\
 $ZSH_VIRTUALENVPROMPT_INFO\
-$PR_BAR_COLOR$PR_SHIFT_IN$PR_HBAR$PR_HBAR\
-${(e)PR_FILLBAR}$PR_HBAR$PR_SHIFT_OUT\
+$PR_BAR_COLOR$PR_SHIFT_IN${(e)PR_FILLBAR}$PR_HBAR$PR_SHIFT_OUT\
 ${PR_BRACKET_COLOR}[$PR_GREEN%$PR_PWDLEN<...<%~%<<$PR_BRACKET_COLOR]\
 $PR_BAR_COLOR$PR_SHIFT_IN$PR_HBAR$PR_URCORNER$PR_SHIFT_OUT\
 
