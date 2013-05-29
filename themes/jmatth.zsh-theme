@@ -104,7 +104,7 @@ setprompt () {
     ###
     # Central location for colors of repeated elements
     PR_BRACKET_COLOR=$PR_BLUE
-    PR_BAR_COLOR=$PR_CYAN
+    PR_BAR_COLOR=$PR_BLUE
 
     ###
     # Modify Git prompt
@@ -113,40 +113,16 @@ setprompt () {
     ZSH_THEME_GIT_PROMPT_DIRTY=""
     ZSH_THEME_GIT_PROMPT_CLEAN=""
 
-    #if [[ `tput colors` -ge 256 ]]; then
-        #ZSH_THEME_GIT_PROMPT_ADDED="%{$fg[green]%} ✚"
-        #ZSH_THEME_GIT_PROMPT_MODIFIED="%{$fg[blue]%} ✹"
-        #ZSH_THEME_GIT_PROMPT_DELETED="%{$fg[red]%} ✖"
-        #ZSH_THEME_GIT_PROMPT_RENAMED="%{$fg[magenta]%} ➜"
-        #ZSH_THEME_GIT_PROMPT_UNMERGED="%{$fg[yellow]%} ═"
-        #ZSH_THEME_GIT_PROMPT_UNTRACKED="%{$fg[cyan]%} ✭"
-        #ZSH_THEME_GIT_PROMPT_BEHIND="%{$fg[green]%} ↓"
-        #ZSH_THEME_GIT_PROMPT_AHEAD="%{$fg[green]%} ↑"
-        #ZSH_THEME_GIT_PROMPT_DIVERGED="%{$fg[yellow]%} ⇅"
-        #ZSH_THEME_GIT_PROMPT_STASHED="%{$fg[magenta]%} &"
-    #else
-        ZSH_THEME_GIT_PROMPT_ADDED="%{$fg[green]%} +"
-        ZSH_THEME_GIT_PROMPT_MODIFIED="%{$fg[cyan]%} *"
-        ZSH_THEME_GIT_PROMPT_DELETED="%{$fg[red]%} x"
-        ZSH_THEME_GIT_PROMPT_RENAMED="%{$fg[green]%} $"
-        ZSH_THEME_GIT_PROMPT_UNMERGED="%{$fg[red]%} !"
-        ZSH_THEME_GIT_PROMPT_UNTRACKED="%{$fg[cyan]%} ?"
-        ZSH_THEME_GIT_PROMPT_BEHIND="%{$fg[yellow]%} <"
-        ZSH_THEME_GIT_PROMPT_AHEAD="%{$fg[yellow]%} >"
-        ZSH_THEME_GIT_PROMPT_DIVERGED="%{$fg[yellow]%} %"
-        ZSH_THEME_GIT_PROMPT_STASHED="%{$fg[magenta]%} &"
-    #fi
-
-    #ZSH_THEME_GIT_PROMPT_ADDED="%{$FG[040]%}+%{$reset_color%}"
-    #ZSH_THEME_GIT_PROMPT_RENAMED="%{$FG[040]%}$%{$reset_color%}"
-    #ZSH_THEME_GIT_PROMPT_UNTRACKED="%{$FG[196]%}?%{$reset_color%}"
-    #ZSH_THEME_GIT_PROMPT_MODIFIED="%{$FG[196]%}*%{$reset_color%}"
-    #ZSH_THEME_GIT_PROMPT_DELETED="%{$FG[196]%}×%{$reset_color%}"
-    #ZSH_THEME_GIT_PROMPT_UNMERGED="%{$FG[196]%}!%{$reset_color%}"
-    #ZSH_THEME_GIT_PROMPT_STASHED="%{$FG[207]%}&%{$reset_color%}"
-    #ZSH_THEME_GIT_PROMPT_AHEAD="%{$FG[123]%}>%{$reset_color%}"
-    #ZSH_THEME_GIT_PROMPT_BEHIND="%{$FG[123]%}<%{$reset_color%}"
-    #ZSH_THEME_GIT_PROMPT_DIVERGED="%{$FG[123]%}Ø%{$reset_color%}"
+    ZSH_THEME_GIT_PROMPT_ADDED="%{$fg[green]%} +"
+    ZSH_THEME_GIT_PROMPT_MODIFIED="%{$fg[red]%} *"
+    ZSH_THEME_GIT_PROMPT_DELETED="%{$fg[red]%} x"
+    ZSH_THEME_GIT_PROMPT_RENAMED="%{$fg[green]%} $"
+    ZSH_THEME_GIT_PROMPT_UNMERGED="%{$fg[red]%} !"
+    ZSH_THEME_GIT_PROMPT_UNTRACKED="%{$fg[red]%} ?"
+    ZSH_THEME_GIT_PROMPT_BEHIND="%{$fg[yellow]%} <"
+    ZSH_THEME_GIT_PROMPT_AHEAD="%{$fg[yellow]%} >"
+    ZSH_THEME_GIT_PROMPT_DIVERGED="%{$fg[yellow]%} %"
+    ZSH_THEME_GIT_PROMPT_STASHED="%{$fg[magenta]%} &"
 
     ###
     # Define characters to indicate vi mode
@@ -209,11 +185,12 @@ setprompt () {
 
     PROMPT='$PR_SET_CHARSET$PR_STITLE${(e)PR_TITLEBAR}\
 $PR_BAR_COLOR$PR_SHIFT_IN$PR_ULCORNER$PR_HBAR$PR_SHIFT_OUT\
-${PR_BRACKET_COLOR}[%(!.%S${PR_RED}ROOT%s.$PR_CYAN%n)$PR_NO_COLOR@$PR_HOST_COLOR%m:%l$PR_BRACKET_COLOR]\
-$ZSH_RUBYPROMPT_INFO\
-$ZSH_VIRTUALENVPROMPT_INFO\
-$PR_BAR_COLOR$PR_SHIFT_IN${(e)PR_FILLBAR}$PR_HBAR$PR_SHIFT_OUT\
 ${PR_BRACKET_COLOR}[$PR_GREEN%$PR_PWDLEN<...<%~%<<$PR_BRACKET_COLOR]\
+$PR_BAR_COLOR$PR_SHIFT_IN${(e)PR_FILLBAR}$PR_SHIFT_OUT\
+$ZSH_VIRTUALENVPROMPT_INFO\
+$ZSH_RUBYPROMPT_INFO\
+$PR_BAR_COLOR$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT\
+${PR_BRACKET_COLOR}[%(!.%S${PR_RED}ROOT%s.$PR_CYAN%n)$PR_NO_COLOR@$PR_HOST_COLOR%m:%l$PR_BRACKET_COLOR]\
 $PR_BAR_COLOR$PR_SHIFT_IN$PR_HBAR$PR_URCORNER$PR_SHIFT_OUT\
 
 $PR_BAR_COLOR$PR_SHIFT_IN$PR_LLCORNER$PR_HBAR$PR_SHIFT_OUT\
@@ -224,7 +201,7 @@ $PR_NO_COLOR%#$PR_BAR_COLOR${$(vi_mode_prompt_info_left):-">"} '
     # display exitcode on the right when >0
     return_code="%(?..%{$fg[red]%}%?! $PR_NO_COLOR)"
     RPROMPT=' $return_code$PR_BAR_COLOR${$(vi_mode_prompt_info_right):-"<"}$PR_BAR_COLOR$PR_SHIFT_IN$PR_HBAR$PR_HBAR$PR_SHIFT_OUT\
-${PR_BRACKET_COLOR}[$PR_YELLOW%!$PR_BRACKET_COLOR]$PR_BAR_COLOR$PR_SHIFT_IN$PR_HBAR$PR_LRCORNER$PR_SHIFT_OUT$PR_NO_COLOR'
+${PR_BRACKET_COLOR}[$PR_MAGENTA%!$PR_BRACKET_COLOR]$PR_BAR_COLOR$PR_SHIFT_IN$PR_HBAR$PR_LRCORNER$PR_SHIFT_OUT$PR_NO_COLOR'
     PS2='$PR_NO_COLOR$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT\
 $PR_BLUE$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT(\
 $PR_BOLD_GREEN%_$PR_BLUE)$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT\
