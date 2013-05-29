@@ -92,6 +92,12 @@ then
 	: ${ZSH_HIGHLIGHT_STYLES[globbing]::=fg=cyan}
 fi
 
+function git_prompt_verbose_info() {
+  ref=$(git symbolic-ref HEAD 2> /dev/null) || \
+        ref=$(git rev-parse --short HEAD 2> /dev/null) || return
+    echo "$ZSH_THEME_GIT_PROMPT_PREFIX${ref#refs/heads/}$(git_prompt_status)$ZSH_THEME_GIT_PROMPT_SUFFIX"
+}
+
 # Functions used to display the custom prompt character.
 function inGit ()
 {

@@ -72,6 +72,12 @@ theme_preexec () {
     fi
 }
 
+function git_prompt_verbose_info() {
+  ref=$(git symbolic-ref HEAD 2> /dev/null) || \
+        ref=$(git rev-parse --short HEAD 2> /dev/null) || return
+    echo "$ZSH_THEME_GIT_PROMPT_PREFIX${ref#refs/heads/}$(git_prompt_status)$ZSH_THEME_GIT_PROMPT_SUFFIX"
+}
+
 function vi_mode_prompt_info_left() {
   echo "${${KEYMAP/vicmd/$MODE_INDICATOR_LEFT}/(main|viins)/}"
 }
