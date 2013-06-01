@@ -64,13 +64,13 @@ function theme_precmd {
 }
 
 
-setopt extended_glob
-theme_preexec () {
-    if [[ "$TERM" == "screen" || "$TERM" == "screen-256color" ]]; then
-    local CMD=${1[(wr)^(*=*|sudo|-*)]}
-    echo -n "\ek$CMD\e\\"
-    fi
-}
+#setopt extended_glob
+#theme_preexec () {
+#    if [[ "$TERM" == "screen" || "$TERM" == "screen-256color" ]]; then
+#    local CMD=${1[(wr)^(*=*|sudo|-*)]}
+#    echo -n "\ek$CMD\e\\"
+#    fi
+#}
 
 function git_prompt_verbose_info() {
   ref=$(git symbolic-ref HEAD 2> /dev/null) || \
@@ -218,4 +218,4 @@ setprompt
 
 autoload -U add-zsh-hook
 add-zsh-hook precmd  theme_precmd
-add-zsh-hook preexec theme_preexec
+#add-zsh-hook preexec theme_preexec
