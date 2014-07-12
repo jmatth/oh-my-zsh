@@ -18,6 +18,9 @@ if which tmux &> /dev/null
 	[[ -n "$ZSH_TMUX_AUTOSTART_ONCE" ]] || ZSH_TMUX_AUTOSTART_ONCE=true
 	# Automatically connect to a previous session if it exists
 	[[ -n "$ZSH_TMUX_AUTOCONNECT" ]] || ZSH_TMUX_AUTOCONNECT=true
+	# When automatically connecting, try to connect to an empty session first,
+	# otherwise start one if autostart is turned on.
+	[[ -n "$ZSH_TMUX_AUTOCONNECT_EXISTING" ]] || ZSH_TMUX_AUTOCONNECT_EXISTING=false
 	# Automatically close the terminal when tmux exits
 	[[ -n "$ZSH_TMUX_AUTOQUIT" ]] || ZSH_TMUX_AUTOQUIT=$ZSH_TMUX_AUTOSTART
 	# Set term to screen or screen-256color based on current terminal support
@@ -65,9 +68,17 @@ if which tmux &> /dev/null
 		# Try to connect to an existing session.
 		elif [[ "$ZSH_TMUX_AUTOCONNECT" == "true" ]]
 		then
-			\tmux `[[ "$ZSH_TMUX_ITERM2" == "true" ]] && echo '-CC '` attach || \tmux `[[ "$ZSH_TMUX_ITERM2" == "true" ]] && echo '-CC '` `[[ "$ZSH_TMUX_FIXTERM" == "true" ]] && echo '-f '$_ZSH_TMUX_FIXED_CONFIG` new-session
+			if [[ "$ZSH_TMUX_AUTOCONNECT_EXISTING" == "true" ]]; then
+				local avail=$(=tmux list-sessions -F '#{?session_attached,,#S}' 2> /dev/null | grep -v '^$' | head -n1)
+				if [[ -n "$avail" ]]; then
+					\tmux attach -t $avail
+				else
+					\tmux `[[ "$ZSH_TMUX_ITERM2" == "true" ]] && echo '-CC '` `[[ "$ZSH_TMUX_FIXTERM" == "true" ]] && echo '-f '$_ZSH_TMUX_FIXED_CONFIG` new-session
+				fi
+			else
+				\tmux `[[ "$ZSH_TMUX_ITERM2" == "true" ]] && echo '-CC '` attach || \tmux `[[ "$ZSH_TMUX_ITERM2" == "true" ]] && echo '-CC '` `[[ "$ZSH_TMUX_FIXTERM" == "true" ]] && echo '-f '$_ZSH_TMUX_FIXED_CONFIG` new-session
+			fi
 			[[ "$ZSH_TMUX_AUTOQUIT" == "true" ]] && exit
-		# Just run tmux, fixing the TERM variable if requested.
 		else
 			\tmux `[[ "$ZSH_TMUX_ITERM2" == "true" ]] && echo '-CC '` `[[ "$ZSH_TMUX_FIXTERM" == "true" ]] && echo '-f '$_ZSH_TMUX_FIXED_CONFIG`
 			[[ "$ZSH_TMUX_AUTOQUIT" == "true" ]] && exit
