@@ -61,6 +61,8 @@ if which tmux &> /dev/null
 	# Wrapper function for tmux.
 	function _zsh_tmux_plugin_run()
 	{
+		local iterm=`[[ "$ZSH_TMUX_ITERM2" == "true" ]] && echo '-CC '`
+		local fixterm=`[[ "$ZSH_TMUX_FIXTERM" == "true" ]] && echo '-f '$_ZSH_TMUX_FIXED_CONFIG`
 		# We have other arguments, just run them
 		if [[ -n "$@" ]]
 		then
@@ -73,14 +75,14 @@ if which tmux &> /dev/null
 				if [[ -n "$avail" ]]; then
 					\tmux attach -t $avail
 				else
-					\tmux `[[ "$ZSH_TMUX_ITERM2" == "true" ]] && echo '-CC '` `[[ "$ZSH_TMUX_FIXTERM" == "true" ]] && echo '-f '$_ZSH_TMUX_FIXED_CONFIG` new-session
+					\tmux $iterm $fixterm new-session
 				fi
 			else
-				\tmux `[[ "$ZSH_TMUX_ITERM2" == "true" ]] && echo '-CC '` attach || \tmux `[[ "$ZSH_TMUX_ITERM2" == "true" ]] && echo '-CC '` `[[ "$ZSH_TMUX_FIXTERM" == "true" ]] && echo '-f '$_ZSH_TMUX_FIXED_CONFIG` new-session
+				\tmux $iterm attach || =tmux $iterm $fixterm new-session
 			fi
 			[[ "$ZSH_TMUX_AUTOQUIT" == "true" ]] && exit
 		else
-			\tmux `[[ "$ZSH_TMUX_ITERM2" == "true" ]] && echo '-CC '` `[[ "$ZSH_TMUX_FIXTERM" == "true" ]] && echo '-f '$_ZSH_TMUX_FIXED_CONFIG`
+			\tmux $iterm $fixterm
 			[[ "$ZSH_TMUX_AUTOQUIT" == "true" ]] && exit
 		fi
 	}
